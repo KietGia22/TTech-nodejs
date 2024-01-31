@@ -1,4 +1,3 @@
-const { required } = require('joi');
 const mongoose = require('mongoose');
 
 const ProductSchema = new mongoose.Schema({
@@ -22,36 +21,10 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         default: '/uploads/example.jpeg'
     },
-    category: {
-      type: String,
-      required: [true, 'Please provide product category'],
-      enum: ['office', 'kitchen', 'bedroom'],
-    },
     company: {
-      type: String,
-      required: [true, 'Please provide company'],
-      enum: {
-        values: ['ikea', 'liddy', 'marcos'],
-        message: '{VALUE} is not supported',
-      },
-    },
-    colors: {
-      type: [String],
-      default: ['#222'],
+      type: mongoose.Types.ObjectId,
+      ref: 'Supplier',
       required: true,
-    },
-    featured: {
-      type: Boolean,
-      default: false,
-    },
-    freeShipping: {
-      type: Boolean,
-      default: false,
-    },
-    inventory: {
-      type: Number,
-      required: true,
-      default: 15,
     },
     averageRating: {
       type: Number,
@@ -66,6 +39,15 @@ const ProductSchema = new mongoose.Schema({
       ref: 'User',
       required: true,
     },
+    category: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Category',
+      required: true
+    },
+    quantity_pr: {
+      type: Number,
+      default: 0
+    }
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );
