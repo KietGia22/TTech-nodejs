@@ -1,38 +1,104 @@
 [
   {
-    "name": "accent chair",
-    "price": 25999,
-    "image": "https://dl.airtable.com/.attachmentThumbnails/e8bc3791196535af65f40e36993b9e1f/438bd160",
-    "colors": ["#ff0000", "#00ff00", "#0000ff"],
-    "company": "marcos",
-    "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
-    "category": "office"
+    "name": "Samsung Galaxy S21",
+    "description": "6.2-inch display, 12GB RAM, 256GB storage, 64MP camera",
+    "price": "12000000",
+    "quantity_pr": "50"
   },
   {
-    "name": "albany sectional",
-    "price": 109999,
-    "image": "https://dl.airtable.com/.attachmentThumbnails/0be1af59cf889899b5c9abb1e4db38a4/d631ac52",
-    "colors": ["#000", "#ffb900"],
-    "company": "liddy",
-    "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
-    "category": "kitchen"
+    "name": "Acer Aspire TC-895-UA92",
+    "description": "Intel Core i5-10400, 12GB RAM, 512GB SSD, Windows 10 Home",
+    "price": "11000000",
+    "quantity_pr": "50"
   },
   {
-    "name": "armchair",
-    "price": 12599,
-    "image": "https://dl.airtable.com/.attachmentThumbnails/530c07c5ade5acd9934c8dd334458b86/cf91397f",
-    "colors": ["#000", "#00ff00", "#0000ff"],
-    "company": "marcos",
-    "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
-    "category": "bedroom"
+    "name": "AKG Y500 Wireless",
+    "description": "On-ear headphones, Bluetooth 4.2, multipoint connection",
+    "price": "3000000",
+    "quantity_pr": "50"
   },
   {
-    "name": "emperor bed",
-    "price": 23999,
-    "image": "https://dl.airtable.com/.attachmentThumbnails/0446e84c5bca9643de3452a61b2d6195/1b32f48b",
-    "colors": ["#0000ff", "#000"],
-    "company": "ikea",
-    "description": "Cloud bread VHS hell of banjo bicycle rights jianbing umami mumblecore etsy 8-bit pok pok +1 wolf. Vexillologist yr dreamcatcher waistcoat, authentic chillwave trust fund. Viral typewriter fingerstache pinterest pork belly narwhal. Schlitz venmo everyday carry kitsch pitchfork chillwave iPhone taiyaki trust fund hashtag kinfolk microdosing gochujang live-edge",
-    "category": "bedroom"
+    "name_pr": "AKKO 3108 V2 Stars Mechanical Keyboard",
+    "detail": "Cherry MX Brown switches, PBT dye-subbed keycaps, full-size layout",
+    "price": "2500000",
+    "quantity_pr": "20"
+  },
+  {
+    "name_pr": "AKKO 3068 Silent Mechanical Keyboard",
+    "detail": "Cherry MX Silent Red switches, PBT dye-subbed keycaps, compact 68-key layout",
+    "price": "2900000",
+    "quantity_pr": "15"
+  },
+  {
+    "name_pr": "AKKO 3084 Wireless Mechanical Keyboard",
+    "detail": "Cherry MX Red switches, PBT dye-subbed keycaps, wireless connectivity",
+    "price": "3300000",
+    "quantity_pr": "10"
+  },
+  {
+    "name_pr": "AKKO Royale Ocean Star Mechanical Keyboard",
+    "detail": "Custom design based on the ocean and stars, Cherry MX Brown switches, PBT dye-subbed keycaps, full-size layout",
+    "price": "3500000",
+    "quantity_pr": "10"
+  },
+  {
+    "name_pr": "Anker Wireless Charger",
+    "detail": "10W fast charging pad, compatible with iPhone and Samsung devices",
+    "price": "500000",
+    "quantity_pr": "30"
+  },
+  {
+    "name_pr": "ASUS ProArt PA32UCX-K",
+    "detail": "32-inch 4K HDR professional monitor, Mini LED technology, Thunderbolt 3",
+    "price": "50000000",
+    "quantity_pr": "10"
+  },
+  {
+    "name_pr": "ASUS RT-AX3000 Wireless Router",
+    "detail": "Dual band 3000Mbps Wi-Fi, 4 Gigabit LAN ports, support for AiMesh mesh network",
+    "price": "3500000",
+    "quantity_pr": "10"
+  },
+  {
+    "name_pr": "Vivo iQOO 7",
+    "detail": "6.62-inch AMOLED display, 8GB RAM, 128GB storage, 48MP camera",
+    "price": "9000000",
+    "quantity_pr": "50"
+  },
+  {
+    "name_pr": "Realme X7 Pro",
+    "detail": "6.55-inch AMOLED display, 8GB RAM, 128GB storage, 64MP camera",
+    "price": "8000000",
+    "quantity_pr": "50"
+  },
+  {
+    "name_pr": "Oppo Find X3 Pro",
+    "detail": "6.7-inch AMOLED display, 12GB RAM, 256GB storage, 50MP camera",
+    "price": "14000000",
+    "quantity_pr": "25"
+  },
+  {
+    "name_pr": "Motorola Edge Plus",
+    "detail": "6.7-inch OLED display, 12GB RAM, 256GB storage, 108MP camera",
+    "price": "13000000",
+    "quantity_pr": "30"
+  },
+  {
+    "name_pr": "Redmi K40 Pro Plus",
+    "detail": "6.67-inch AMOLED display, 8GB RAM, 128GB storage, 108MP camera",
+    "price": "11000000",
+    "quantity_pr": "30"
+  },
+  {
+    "name_pr": "TP-Link Archer C7 Wireless Router",
+    "detail": "Dual band 1750Mbps Wi-Fi, 4 Gigabit LAN ports, USB 2.0 port for storage and sharing",
+    "price": "1900000",
+    "quantity_pr": "10"
+  },
+  {
+    "name_pr": "Apple iPad Air",
+    "detail": "10.9-inch Liquid Retina display, A14 Bionic chip, 4GB RAM, 256GB storage",
+    "price": "17000000",
+    "quantity_pr": "15"
   }
 ]

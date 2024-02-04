@@ -6,7 +6,7 @@ const CategorySchema = new mongoose.Schema({
         required: [true, 'Please provide name'],
         minLength: 3,
         maxLength: 100,
-    }
+    },
 })
 
 CategorySchema.pre("deleteOne", {document: true}, async function(next){

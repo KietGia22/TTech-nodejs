@@ -38,12 +38,12 @@ const GetSingleProductService = async ({productId}) => {
     }
 }
 
-const updateProductService = async ({productId}) => {
+const updateProductService = async ({productId, body}) => {
     try {
 
         const product = await Product.findOneAndUpdate({
             _id: productId
-        }, req.body, {
+        }, body, {
             new: true,
             runValidators: true
         });

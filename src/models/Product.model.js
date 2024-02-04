@@ -21,10 +21,9 @@ const ProductSchema = new mongoose.Schema({
         type: String,
         default: '/uploads/example.jpeg'
     },
-    company: {
-      type: mongoose.Types.ObjectId,
-      ref: 'Supplier',
-      required: true,
+    quantity_pr: {
+      type: Number,
+      default: 0
     },
     averageRating: {
       type: Number,
@@ -33,6 +32,11 @@ const ProductSchema = new mongoose.Schema({
     numOfReviews: {
       type: Number,
       default: 0,
+    },
+    company: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Supplier',
+      required: true,
     },
     user: {
       type: mongoose.Types.ObjectId,
@@ -44,10 +48,6 @@ const ProductSchema = new mongoose.Schema({
       ref: 'Category',
       required: true
     },
-    quantity_pr: {
-      type: Number,
-      default: 0
-    }
   },
   { timestamps: true, toJSON: { virtuals: true }, toObject: { virtuals: true } }
 );

@@ -1,8 +1,6 @@
 const {StatusCodes} = require('http-status-codes')
-const CustomError = require('../errors')
 const ProductService = require('../services/product.service');
 const ProductModels = require('../models/Product.model');
-const path = require('path');
 
 
 
@@ -39,7 +37,8 @@ const updateProduct = async (req, res) => {
     // res.send(`updateProduct`)
     try {
         const {id: productId} = req.params;
-        const {product} = await ProductService.updateProductService({productId});
+        const body = req.body
+        const {product} = await ProductService.updateProductService({productId, body});
         res.status(StatusCodes.OK).json({product})
 
     } catch (err) {
