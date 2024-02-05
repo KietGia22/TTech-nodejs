@@ -13,10 +13,14 @@ const DiscountSchema = new mongoose.Schema({
     },
     discount_date: {
         type: Date,
+        trim: true, 
+        default: '',
         required: [true, 'please provide date']
     },
     discount_expires: {
-        type: Date
+        type: Date,
+        trim: true, 
+        default: '',
     }
 })
 
