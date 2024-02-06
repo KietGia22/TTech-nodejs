@@ -14,9 +14,9 @@ const createProduct = async (req, res) => {
 const GetAllProducts = async (req, res) => {
     // res.send(`getAllProducts`)
     try {
-        const query = req.query;
-        const {products, numOfPages, totalProducts } = await ProductService.GetAllProductsService(query);
-        res.status(StatusCodes.OK).json({products, numOfPages, totalProducts});
+        const query = req.query;      
+        const {products, numOfPages, totalProducts, currentPage } = await ProductService.GetAllProductsService(query);
+        res.status(StatusCodes.OK).json({products, numOfPages, totalProducts, currentPage});
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
     }

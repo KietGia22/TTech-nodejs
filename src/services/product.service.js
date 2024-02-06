@@ -5,21 +5,43 @@ const fs = require('fs')
 
 const GetAllProductsService = async (query) => {
     try {
-        let result = Product.find({});
+        const queryObject = {};
+        if (query.search) {
+            queryObject.name = { $regex: query.search, $options: 'i' };
+        } 
+        if(query.cate) {
+            queryObject.category = query.cate
+        }
+        if(query.sup){
+            queryObject.company = query.sup
+        }
+
+        let result = Product.find(queryObject);
+
+        if (query.sort === 'minTomax') {
+            result = result.sort({ price: 1 });
+        } else if (query.sort === 'a-z') {
+            result = result.sort({ name: 1 });
+        } else if (query.sort === 'z-a') {
+            result = result.sort({ name: -1 });
+        } else if (query.sort === 'maxTomin') {
+            result = result.sort({price: -1})
+        }
 
         const page = Number(query.page) || 1;
-        const limit = Number(query.limit) || 10;
+        const limit = Number(query.limit) || 9;
         const skip = (page - 1) * limit;
 
         result = result.skip(skip).limit(limit);
 
         const products = await result;
-        console.log(products)
+        // console.log(products);
 
-        const totalProducts = await Product.countDocuments(products);
-        const numOfPages = Math.ceil(totalProducts/limit);
+        const totalProducts = await Product.countDocuments(queryObject);
+        const numOfPages = Math.ceil(totalProducts / limit);
 
-        return {products: products, numOfPages: numOfPages, totalProducts: totalProducts}
+        return { products, numOfPages, totalProducts, currentPage: page };
+
     } catch (err) {
         console.log(err)
     }
