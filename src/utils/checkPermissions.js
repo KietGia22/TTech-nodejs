@@ -6,7 +6,7 @@ const checkPermissions = (reqUser, resourceUserId) => {
     if(reqUser.userId === resourceUserId.toString())
         return 
     throw new CustomError.UnauthenticatedError(
-        'Not authorized to access this route'
+        'Bạn không có sở hữu tài khoản này'
     )
 }
 
