@@ -1,57 +1,89 @@
 const Cart = require('../models/Cart.model')
 const CustomError = require('../errors')
 const Product = require('../models/Product.model')
+const {CartPermissions} = require('../utils')
 const {checkPermissions} = require('../utils')
 
 const AddToCartService = async ({body, user}) => {
-    checkPermissions(user, body.user)
+    CartPermissions(user, body.user)
     try {   
-        const product = await Product.findById(body.product).select("_id")
+        let products = [];
+        for (const item of body.products) {
+            const product = await Product.findById(item.product);
+            if (!product)   
+                throw new CustomError.NotFoundError(`Not found product with id: ${item._id}`);
 
-        if(!product)
-            throw new CustomError.NotFoundError(`Not found product with id: ${body.product}`)
-
-        const cart = await Cart.findOne({
-            user: body.user,
-            product: product._id
-        })
-        if(cart){
-            cart.quantity += Number(body.quantity)
-            await cart.save()
-            return {cart: cart}
-        } else if(!cart){
-            const Newcart = await Cart.create(body);
-            return {cart: Newcart}
+            const { _id: productId} = product;
+            const cartItem = {
+                product: productId,
+                quantity: item.quantity
+            }
+            products = [...products, cartItem];
+            
         }
+
+        let cart = await Cart.findOne({
+            user: body.user
+        }).populate({
+            path: 'products.product', // Chỉ định trường cần populate và model tương ứng
+            model: 'Product'
+        }).populate('user');
+
+        if (cart) {
+            // cart.products = [...cart.products, ...products];
+            for(const item of products){
+                const existingProd = cart.products.find(prod => prod.product.equals(item.product))
+                if(existingProd)
+                    existingProd.quantity += Number(item.quantity)
+                else 
+                    cart.products = [...cart.products, item]
+            }
+        } else {
+            cart = await Cart.create({
+                user: body.user,
+                products: products
+            });
+        }
+
+        await cart.save();
+        return { cart: cart };
+
     } catch(err) {
         throw err
     }
 }
 
 const UpdateQuantityService = async ({body, user}) => {
-    checkPermissions(user, body.user)
+    CartPermissions(user, body.user)
     try {
         const cart = await Cart.findOne({
             user: body.user,
-            product: body.product
         })
-        if(cart && body.quantity > 0){
-            cart.quantity = Number(body.quantity)
-            await cart.save()
-            return {cart: cart, msg: `Update successful`}
-        } else if(!cart)
-            throw new CustomError.NotFoundError(`Cart doesn't exist`)
-        else if(body.quantity === 0){
-            await cart.deleteOne()
-            return {msg: `The product has been removed from the cart`}
+        if(!cart)
+            throw new CustomError.NotFoundError(`Cart not found`)
+        else {
+            for (const item of body.products) {
+                const existingProdIndex = cart.products.findIndex(prod => prod.product.equals(item.product));
+                if (existingProdIndex === -1)
+                    throw new CustomError.NotFoundError(`Not found product with id: ${item.product} in cart`);
+
+                if (item.quantity > 0) {
+                    cart.products[existingProdIndex].quantity = item.quantity;
+                } else if (item.quantity === 0) {
+                    cart.products.splice(existingProdIndex, 1);
+                }
+            }
         }
+        
+        await cart.save();
+        return {cart: cart}
     } catch(err) {
         throw err
     }
 }
 
 const EmptyCartService = async ({body, user}) => {
-    checkPermissions(user, body.user)
+    CartPermissions(user, body.user)
     try {   
         const cart = await Cart.find({
             user: body.user
@@ -73,9 +105,12 @@ const EmptyCartService = async ({body, user}) => {
 const getCartService = async ({userId, user}) => {
     checkPermissions(user, userId)
     try {
-        const UserCart = await Cart.find({
+        const UserCart = await Cart.findOne({
             user: userId
-        }).populate('product')
+        }).populate({
+            path: 'products.product', // Chỉ định trường cần populate và model tương ứng
+            model: 'Product'
+        }).populate('user')
         return {UserCart: UserCart}
 
     } catch(err) {
@@ -84,18 +119,23 @@ const getCartService = async ({userId, user}) => {
 }
 
 const RemoveFromCartService = async({body, user})=>{
-    checkPermissions(user, body.user)
+    CartPermissions(user, body.user)
     try {
-        const RemoveItem = await Cart.findOne({
+        const cart = await Cart.findOne({
             user: body.user,
-            product: body.product
         })
-
-        if(!RemoveItem)
-            throw new CustomError.NotFoundError(`Not found product with id ${body.product} in cart`)
-
-        await RemoveItem.deleteOne()
-
+        if(!cart)
+            throw new CustomError.NotFoundError(`Cart not found`)
+        else {
+            for (const item of body.products) {
+                const existingProdIndex = cart.products.findIndex(prod => prod.product.equals(item.product));
+                if (existingProdIndex === -1)
+                    throw new CustomError.NotFoundError(`Not found product with id: ${item.product} in cart`);
+                cart.products.splice(existingProdIndex, 1);
+            }
+        }
+        
+        await cart.save();
         return {msg: `Removed successfully from cart`}
     } catch(err){
         throw err
