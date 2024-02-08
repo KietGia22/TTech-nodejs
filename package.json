@@ -29,6 +29,7 @@
     "mongoose": "^8.0.3",
     "morgan": "^1.10.0",
     "rate-limiter": "^0.2.0",
+    "stripe": "^14.15.0",
     "swagger-ui-express": "^5.0.0",
     "validator": "^13.11.0",
     "xss-clean": "^0.1.4",

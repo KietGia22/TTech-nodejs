@@ -24,10 +24,11 @@ const AddToCartService = async ({body, user}) => {
 
         let cart = await Cart.findOne({
             user: body.user
-        }).populate({
+        })
+        .populate({
             path: 'products.product', // Chỉ định trường cần populate và model tương ứng
             model: 'Product'
-        }).populate('user');
+        })
 
         if (cart) {
             // cart.products = [...cart.products, ...products];
@@ -107,10 +108,11 @@ const getCartService = async ({userId, user}) => {
     try {
         const UserCart = await Cart.findOne({
             user: userId
-        }).populate({
+        })
+        .populate({
             path: 'products.product', // Chỉ định trường cần populate và model tương ứng
             model: 'Product'
-        }).populate('user')
+        })
         return {UserCart: UserCart}
 
     } catch(err) {
