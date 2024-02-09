@@ -5,7 +5,7 @@ const register = async (req, res) => {
   // res.send('register user')
   try {
     const body = req.body
-    const { user } = await AuthService.registerService(body, res)
+    const { user } = await AuthService.registerService({body, res})
     res.status(StatusCodes.CREATED).json({ user: user })
   } catch (err) {
     res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
@@ -15,7 +15,7 @@ const register = async (req, res) => {
 const login = async (req, res) => {
   try {
     const body = req.body;
-    const {user} = await AuthService.loginService(body, res);
+    const {user} = await AuthService.loginService({body, res});
     res.status(StatusCodes.OK).json({ user: user })
   
   } catch (err) {

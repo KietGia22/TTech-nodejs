@@ -5,47 +5,46 @@ const {
     checkPermissions
 } = require('../utils');
 
-const getAllUsersService = async(data) => {
-    console.log(data);
+const getAllUsersService = async() => {
     const users = await User.find({ role: 'user' }).select('-password');
+    const total = users.length
     // console.log(users);
-    return {users: users}
+    return {users: users, total: total}
 }
 
-const getSingleUserService = async(req) => {
-    // console.log(req)
-    const user = await User.findOne({_id: req.params.id}).select('-password')
+const getSingleUserService = async({userId, user}) => {
+    const SingleUser = await User.findOne({_id: userId}).select('-password')
     
     if(!user)
-        throw new CustomError.NotFoundError(`No user with id : ${req.params.id}`);
+        throw new CustomError.NotFoundError(`No user with id : ${userId}`);
     
-    checkPermissions(req.user, user._id);
+    checkPermissions(user, SingleUser._id);
     
-    return {user: user}
+    return {SingleUser: user}
 }
 
-const updateCurrentUserService = async(req, res) => {
-    const {email, name} = req.body;
+const updateCurrentUserService = async({body, user}) => {
+    const {email, name} = body;
 
     if(!email || !name)
         throw new CustomError.BadRequestError('Please provide all values');
 
-    const user = await User.findOneAndUpdate(
-        {_id: req.user.userId},
+    const userTemp = await User.findOneAndUpdate(
+        {_id: user.userId},
         {email, name},
         {new: true, runValidators: true}
     )
 
-    const updatedUser = createTokenUser(user);
+    const updatedUser = createTokenUser(userTemp);
     return {updatedUser: updatedUser}
 }
 
-const updateUserPasswordService = async(req) => {
-    const {oldPassword, newPassword} = req.body;
+const updateUserPasswordService = async({body, userId}) => {
+    const {oldPassword, newPassword} = body;
     if(!oldPassword || !newPassword)
         throw new CustomError.BadRequestError('Please provide all values');
 
-    const user = await User.findOne({_id: req.user.userId});
+    const user = await User.findOne({_id: userId});
 
     const isPasswordCorrect = await user.comparePassword(oldPassword);
     if(!isPasswordCorrect)

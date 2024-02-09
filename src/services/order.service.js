@@ -73,7 +73,9 @@ const getAllOrdersService = async () => {
 
     if(!orders)
         throw new CustomError.BadRequestError(`Still no orders placed.`)
-    return {orders: orders}
+
+    const total = orders.length
+    return {orders: orders, total: total}
 }
 
 const getSingleOrderService = async({orderId}) => {

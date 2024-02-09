@@ -10,9 +10,8 @@ const {
 
 const getAllUsers = async (req, res) => {
     try {
-        const { users } = await UserService.getAllUsersService(req.user)
-        // console.log(users)
-        res.status(StatusCodes.OK).json({users})
+        const { total, users } = await UserService.getAllUsersService()
+        res.status(StatusCodes.OK).json({total, users})
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
     }
@@ -24,8 +23,10 @@ const showCurrentUser = async (req, res) => {
 
 const getSingleUser = async (req, res) => {
     try {
-        const {user} = await UserService.getSingleUserService(req);
-        console.log(user);
+        const {id: userId} = req.params
+        const user = req.user;
+        const {SingleUser} = await UserService.getSingleUserService({userId, user});
+        console.log(SingleUser);
         res.status(StatusCodes.OK).json({user})
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
@@ -34,7 +35,9 @@ const getSingleUser = async (req, res) => {
 
 const updatedCurrentUser = async (req,res) => {
     try {
-        const {updatedUser} = await UserService.updateCurrentUserService(req)
+        const body = req.body
+        const user = req.user
+        const {updatedUser} = await UserService.updateCurrentUserService({body, user})
         attachCookiesToResponse({res, user: updatedUser});
         res.status(StatusCodes.OK).json({user: updatedUser})
     } catch (err) {
@@ -44,7 +47,9 @@ const updatedCurrentUser = async (req,res) => {
 
 const updateUserPassword = async (req, res) => {
     try {
-        const {updatedUser} = await UserService.updateUserPasswordService(req);
+        const {userId} = req.user
+        const body = req.body
+        const {updatedUser} = await UserService.updateUserPasswordService({body, userId});
         console.log(updatedUser)
         res.status(StatusCodes.OK).json({user: updatedUser, msg: 'Success! Password Updated.'})
     } catch(err) {

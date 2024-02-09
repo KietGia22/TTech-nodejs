@@ -17,7 +17,7 @@ function generateRandomString(length) {
     return result;
 }
 
-const registerService = async (body, res) => {
+const registerService = async ({body, res}) => {
   const { email, name, password } = body
 
   const emailAlreadyExists = await User.findOne({ email })
@@ -36,7 +36,7 @@ const registerService = async (body, res) => {
   return { user: tokenUser }
 }
 
-const loginService = async (body, res) => {
+const loginService = async ({body, res}) => {
   const {email, password} = body
   if(!email || !password)
     throw new CustomError.BadRequestError('Please provide email or password')

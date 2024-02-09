@@ -3,8 +3,8 @@ const {StatusCodes} = require('http-status-codes');
 
 const getAllOrders = async(req, res) => {
     try {
-        const {orders} = await OrderService.getAllOrdersService();
-        res.status(StatusCodes.OK).json({orders})
+        const {orders, total} = await OrderService.getAllOrdersService();
+        res.status(StatusCodes.OK).json({total, orders})
     } catch (err) {
         res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
     }

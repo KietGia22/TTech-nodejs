@@ -9,6 +9,7 @@ const DiscountRouter = require('./discount.routes')
 const OrderRouter = require('./order.routes')
 const ReviewRouter = require('./review.routes')
 const SupplierRouter = require('./supplier.routes')
+const RevenueRouter = require('./renevue.routes')
 
 router.use('/auth', authRouter);
 router.use('/users', UserRouter)
@@ -19,5 +20,6 @@ router.use('/discount', DiscountRouter)
 router.use('/order', OrderRouter)
 router.use('/review', ReviewRouter)
 router.use('/supplier', SupplierRouter)
+router.use('/renevue', RevenueRouter)
 
 module.exports = router;
