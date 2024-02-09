@@ -2,11 +2,20 @@ const User = require('../models/Auth.model')
 const { StatusCodes } = require('http-status-codes')
 const CustomError = require('../errors')
 const {
-  createJWT,
-  isTokenValid,
   attachCookiesToResponse,
   createTokenUser,
-} = require('../utils/index')
+  forgetPasswordEmail
+} = require('../utils')
+
+function generateRandomString(length) {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    let result = '';
+    for (let i = 0; i < length; i++) {
+        const randomIndex = Math.floor(Math.random() * characters.length);
+        result += characters.charAt(randomIndex);
+    }
+    return result;
+}
 
 const registerService = async (body, res) => {
   const { email, name, password } = body
@@ -35,7 +44,7 @@ const loginService = async (body, res) => {
   const user = await User.findOne({ email })
   
   if(!user)
-    throw new CustomError.UnauthenticatedError(`${user}`)
+    throw new CustomError.UnauthenticatedError(`Not exist`)
 
   const isPasswordCorrect = await user.comparePassword(password)
 
@@ -49,7 +58,31 @@ const loginService = async (body, res) => {
   return {user: tokenUser}
 }
 
+const forgetPasswordService = async ({email}) => {
+  const user = await User.findOne({email});
+
+  if(!email)
+      throw new CustomError.BadRequestError('Please provide valid email');
+  
+  if(!user)
+      throw new CustomError.NotFoundError('Not found user');
+
+  const RandomString = generateRandomString(8)
+  user.password = RandomString
+  console.log(RandomString)
+  await user.save()
+
+  await forgetPasswordEmail({
+    name: user.name,
+    email: user.email,
+    newPass: RandomString
+  })
+
+  return {msg: 'Please check your email for reset password'}
+}
+
 module.exports = {
   registerService,
-  loginService
+  loginService,
+  forgetPasswordService
 }

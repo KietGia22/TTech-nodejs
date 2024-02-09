@@ -31,8 +31,19 @@ const logout = async (req, res) => {
   res.status(StatusCodes.OK).json({msg: 'User logged out'});
 }
 
+const forgetPassword = async (req, res) => {
+  try {
+    const {email} = await req.body;
+    const {msg} = await AuthService.forgetPasswordService({email})
+    res.status(StatusCodes.OK).json({msg})
+  } catch (err) {
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json(err.message)
+  }
+}
+
 module.exports = {
   register,
   login,
   logout,
+  forgetPassword
 }
