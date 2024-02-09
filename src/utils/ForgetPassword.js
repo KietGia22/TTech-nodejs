@@ -1,6 +1,6 @@
 const sendEmail = require('./sendMail')
 
-const forgetPasswordEmail = async ({name, email, newPass}) => {
+const forgotPasswordEmail = async ({name, email, newPass}) => {
     const message = 
     `<!DOCTYPE html>
 <html lang="en">
@@ -69,4 +69,4 @@ const forgetPasswordEmail = async ({name, email, newPass}) => {
     })
 }
 
-module.exports = forgetPasswordEmail
+module.exports = forgotPasswordEmail

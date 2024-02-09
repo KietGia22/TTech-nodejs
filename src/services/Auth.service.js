@@ -4,7 +4,7 @@ const CustomError = require('../errors')
 const {
   attachCookiesToResponse,
   createTokenUser,
-  forgetPasswordEmail
+  forgotPasswordEmail
 } = require('../utils')
 
 function generateRandomString(length) {
@@ -58,7 +58,7 @@ const loginService = async (body, res) => {
   return {user: tokenUser}
 }
 
-const forgetPasswordService = async ({email}) => {
+const forgotPasswordService = async ({email}) => {
   const user = await User.findOne({email});
 
   if(!email)
@@ -72,7 +72,7 @@ const forgetPasswordService = async ({email}) => {
   console.log(RandomString)
   await user.save()
 
-  await forgetPasswordEmail({
+  await forgotPasswordEmail({
     name: user.name,
     email: user.email,
     newPass: RandomString
@@ -84,5 +84,5 @@ const forgetPasswordService = async ({email}) => {
 module.exports = {
   registerService,
   loginService,
-  forgetPasswordService
+  forgotPasswordService
 }
