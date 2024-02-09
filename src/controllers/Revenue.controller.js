@@ -122,7 +122,55 @@ const getTopSellerProduct = async (req, res) => {
     //     }
     // ]);
     // res.status(StatusCodes.OK).json({result})
-    res.send(`hehe chua lam`)
+    // res.send(`hehe chua lam`)
+    try {
+    const { count } = req.body;
+
+    // Kiểm tra xem count có hợp lệ không
+    if (!count || isNaN(count) || count <= 0) {
+      return res.status(400).json({ error: "Invalid count provided" });
+    }
+
+    // Sử dụng aggregation để nhóm các đơn hàng theo sản phẩm và tính số lượng sản phẩm được mua
+    const mostPurchasedProducts = await Order.aggregate([
+      {
+        $unwind: "$orderItems" // Tách mỗi mục trong orderItems thành một document riêng
+      },
+      {
+        $group: {
+          _id: "$orderItems.product",
+          totalQuantity: { $sum: "$orderItems.quantity" }
+        }
+      },
+      {
+        $sort: { totalQuantity: -1 } // Sắp xếp theo số lượng giảm dần
+      },
+      {
+        $limit: count // Chỉ lấy số lượng sản phẩm tối đa được chỉ định
+      }
+    ]);
+
+    // Kiểm tra xem có sản phẩm nào được mua nhiều nhất không
+    if (mostPurchasedProducts.length === 0) {
+      return res.status(404).json({ error: "No product found." });
+    }
+
+    // Lấy thông tin sản phẩm từ _id của sản phẩm
+    const productIds = mostPurchasedProducts.map(product => product._id);
+    const mostPurchasedProductNames = await Product.find({ _id: { $in: productIds } });
+
+    // Tạo mảng kết quả với thông tin sản phẩm và số lượng
+    const result = mostPurchasedProducts.map((product, index) => ({
+      productName: mostPurchasedProductNames[index].name,
+      totalQuantity: product.totalQuantity
+    }));
+
+    // Trả về kết quả
+    res.status(200).json({ result });
+  } catch (error) {
+    console.error("Error finding most purchased products:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
 
 module.exports = {
