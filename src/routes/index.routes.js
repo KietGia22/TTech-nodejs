@@ -20,6 +20,6 @@ router.use('/discount', DiscountRouter)
 router.use('/order', OrderRouter)
 router.use('/review', ReviewRouter)
 router.use('/supplier', SupplierRouter)
-router.use('/renevue', RevenueRouter)
+router.use('/revenue', RevenueRouter)
 
 module.exports = router;

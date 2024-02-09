@@ -1,6 +1,7 @@
 const Order = require('../models/Order.model')
 const Product = require('../models/Product.model')
 const Cart = require('../models/Cart.model')
+const moment = require('moment')
 
 const CustomError = require('../errors')
 const {checkPermissions} = require('../utils')
@@ -50,16 +51,15 @@ const createOrderService = async ({body, user}) => {
         amount: total,
         currency: 'vnd'
     });
-
+    console.log(moment())
     const order = await Order.create({
         orderItems,
         total,
         subtotal,
         shippingFee,
         clientSecret: paymentIntent.client_secret,
-        user: user.userId
+        user: user.userId,
     });
-
     await Cart.deleteOne({
         user: user.userId
     })

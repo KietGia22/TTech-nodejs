@@ -1,70 +1,87 @@
 const Order = require('../models/Order.model')
 const moment = require('moment')
 const {StatusCodes} = require('http-status-codes')
+const Product = require('../models/Product.model')
 
 const getRevenueByDay = async(req, res) => {
-    const startDate = moment().startOf('week');
-    const endDate = moment();
+    try {
+        const today = moment(); // Lấy ngày hiện tại
+        const startOfWeek = today.clone().startOf('week'); // Lấy ngày bắt đầu của tuần (chủ nhật)
+        const endOfWeek = today.clone().endOf('week'); // Lấy ngày kết thúc của tuần (thứ bảy)
 
-    const revenueByDay = {};
+        // Tạo mảng các ngày trong tuần
+        const daysOfWeek = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 
-    for (let date = startDate.clone(); date.isSameOrBefore(endDate); date.add(1, 'day')) {
-        const revenue = await Order.aggregate([
-            {
-                $match: {
-                    create_order_at: {
-                        $gte: date.startOf('day').toDate(),
-                        $lte: date.endOf('day').toDate()
-                    }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: '$total' }
+        // Lấy tổng doanh thu cho mỗi ngày trong tuần
+        const weeklyTotal = await Order.aggregate([
+        {
+            $match: {
+                create_order_at: {
+                    $gte: startOfWeek.toDate(),
+                    $lte: endOfWeek.toDate()
                 }
             }
+        },
+        {
+            $group: {
+                _id: { $dayOfWeek: "$create_order_at" }, // Group the orders by day of the week
+                total: { $sum: "$total" }
+            }
+        }
         ]);
-
-        revenueByDay[date.format('dddd')] = revenue.length > 0 ? revenue[0].total : 0;
-    }
-
-    const result = {
-        day: Object.keys(revenueByDay),
-        revenue: Object.values(revenueByDay)
-    };
-
-    res.status(StatusCodes.OK).json({ result });
+        console.log(weeklyTotal)
+        // Tạo mảng kết quả
+        const weeklyTotalResult = daysOfWeek.map(day => {
+            const totalObj = weeklyTotal.find(item => item._id === daysOfWeek.indexOf(day) + 1);
+            console.log(totalObj);
+            return { [day]: totalObj ? totalObj.total : 0 };
+        });
+        res.status(StatusCodes.OK).json({ result: weeklyTotalResult });
+  } catch (error) {
+        console.error("Error calculating weekly total:", error);
+        res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal server error" });
+  }
 }
 
 const getRevenueByYear = async(req, res) => {
-    const {year} = req.body
-    const endDate = moment();
-    const labels = [];
-    const revenues = [];
+    try {
+    const { year } = req.body;
 
-    for (let month = 1; month <= endDate.month(); month++) {
-        const startDateOfMonth = moment().set({ year, month, date: 1 }).startOf('month');
-        const endDateOfMonth = moment().set({ year, month, date: 1 }).endOf('month');
-
-        const revenue = await Order.aggregate([
-            {
-                $match: {
-                    create_order_at: { $gte: startDateOfMonth.toDate(), $lte: endDateOfMonth.toDate() }
-                }
-            },
-            {
-                $group: {
-                    _id: null,
-                    total: { $sum: '$total' }
-                }
-            }
-        ]);
-
-        labels.push(startDateOfMonth.format('MMMM'));
-        revenues.push(revenue.length > 0 ? revenue[0].total : 0);
+    // Kiểm tra xem year có hợp lệ không
+    if (!year || isNaN(year)) {
+      return res.status(400).json({ error: "Invalid year provided" });
     }
-    res.status(StatusCodes.OK).json({labels, revenues})
+
+    // Tạo ngày bắt đầu và kết thúc của năm
+    const startOfYear = moment({ year }).startOf('year');
+    console.log(startOfYear)
+    const endOfYear = moment({ year }).endOf('year');
+    console.log(endOfYear)
+
+    // Tính tổng doanh thu cho năm đó
+    const yearlyRevenue = await Order.aggregate([
+      {
+        $match: {
+          create_order_at: {
+            $gte: startOfYear.toDate(),
+            $lte: endOfYear.toDate()
+          }
+        }
+      },
+      {
+        $group: {
+          _id: null,
+          total: { $sum: "$total" }
+        }
+      }
+    ]);
+    console.log(yearlyRevenue)
+    // Trả về kết quả
+    res.status(200).json({ result: yearlyRevenue.length > 0 ? yearlyRevenue[0].total : 0 });
+  } catch (error) {
+    console.error("Error calculating yearly revenue:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
 
 const getTopSellerProduct = async (req, res) => {
