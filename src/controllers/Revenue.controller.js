@@ -77,51 +77,52 @@ const getRevenueByYear = async(req, res) => {
     ]);
     console.log(yearlyRevenue)
     // Trả về kết quả
-    res.status(200).json({ result: yearlyRevenue.length > 0 ? yearlyRevenue[0].total : 0 });
+    res.status(StatusCodes.OK).json({ result: yearlyRevenue.length > 0 ? yearlyRevenue[0].total : 0 });
   } catch (error) {
     console.error("Error calculating yearly revenue:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ error: "Internal server error" });
   }
 }
 
 const getTopSellerProduct = async (req, res) => {
-    const subquery = await DetailOrder.aggregate([
-        {
-            $group: {
-                _id: '$product_id',
-                total_quantity_sold: { $sum: '$quantity_pr' }
-            }
-        }
-    ]);
+    // const subquery = await DetailOrder.aggregate([
+    //     {
+    //         $group: {
+    //             _id: '$product_id',
+    //             total_quantity_sold: { $sum: '$quantity_pr' }
+    //         }
+    //     }
+    // ]);
 
-    const result = await Product.aggregate([
-        {
-            $match: { _id: { $in: subquery.map(item => item._id) } }
-        },
-        {
-            $lookup: {
-                from: 'image',
-                localField: '_id',
-                foreignField: 'product_id',
-                as: 'image'
-            }
-        },
-        {
-            $project: {
-                product_id: '$_id',
-                total_quantity_sold: { $arrayElemAt: ['$total_quantity_sold', 0] },
-                product_name: '$name_pr',
-                image: { $arrayElemAt: ['$image.image_path', 0] }
-            }
-        },
-        {
-            $sort: { total_quantity_sold: -1 }
-        },
-        {
-            $limit: count
-        }
-    ]);
-    res.status(StatusCodes.OK).json({result})
+    // const result = await Product.aggregate([
+    //     {
+    //         $match: { _id: { $in: subquery.map(item => item._id) } }
+    //     },
+    //     {
+    //         $lookup: {
+    //             from: 'image',
+    //             localField: '_id',
+    //             foreignField: 'product_id',
+    //             as: 'image'
+    //         }
+    //     },
+    //     {
+    //         $project: {
+    //             product_id: '$_id',
+    //             total_quantity_sold: { $arrayElemAt: ['$total_quantity_sold', 0] },
+    //             product_name: '$name_pr',
+    //             image: { $arrayElemAt: ['$image.image_path', 0] }
+    //         }
+    //     },
+    //     {
+    //         $sort: { total_quantity_sold: -1 }
+    //     },
+    //     {
+    //         $limit: count
+    //     }
+    // ]);
+    // res.status(StatusCodes.OK).json({result})
+    res.send(`hehe chua lam`)
 }
 
 module.exports = {
