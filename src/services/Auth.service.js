@@ -49,7 +49,7 @@ const loginService = async ({body, res}) => {
   const isPasswordCorrect = await user.comparePassword(password)
 
   if(!isPasswordCorrect)
-    throw new CustomError.UnauthenticatedError(`Sai mat khau roi thang lon`)
+    throw new CustomError.UnauthenticatedError(`Sai mat khau roi`)
     
   const tokenUser = createTokenUser(user)
 
